@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Volunteering Certificate – Verify</title>
+  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700;900&family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --primary:      #037EF3;
+      --primary-dark: #025fc4;
+      --primary-light:#e6f2fe;
+      --text:         #1a1a2e;
+      --muted:        #555;
+      --border:       #e0e7ef;
+      --bg:           #f0f4f8;
+      --card-bg:      #ffffff;
+      --nav-h:        56px;
+    }
+
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      height: var(--nav-h);
+      background: #fff;
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 28px;
+      box-shadow: 0 1px 6px rgba(0,0,0,.06);
+    }
+    .nav-brand {
+      display: flex; align-items: center; gap: 12px;
+      text-decoration: none; color: var(--primary);
+      font-family: 'Lato', sans-serif;
+      font-weight: 700; font-size: 1.1rem;
+    }
+    .nav-brand img {
+      height: 32px; width: auto; object-fit: contain;
+    }
+    .nav-moon { display: none; }
+
+    /* ── VERIFIED BADGE – dynamic states ── */
+    .verified-wrap {
+      display: flex; flex-direction: column;
+      align-items: center; gap: 8px;
+      margin: 8px 0 32px;
+    }
+    .verified-badge {
+      width: 80px; height: 80px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      position: relative;
+      cursor: default;
+    }
+    /* Spinning dashed ring */
+    .verified-badge::before {
+      content: '';
+      position: absolute;
+      inset: -6px;
+      border-radius: 50%;
+      border: 2.5px dashed transparent;
+      animation: spin 8s linear infinite;
+    }
+    /* Static outer glow ring */
+    .verified-badge::after {
+      content: '';
+      position: absolute;
+      inset: -6px;
+      border-radius: 50%;
+      border: 2px solid transparent;
+    }
+    .verified-badge i { color: #fff; font-size: 2.1rem; z-index: 1; }
+
+    /* STATE: verified */
+    .verified-badge.state-verified {
+      background: var(--primary);
+      box-shadow: 0 4px 20px rgba(3,126,243,.35);
+    }
+    .verified-badge.state-verified::before {
+      border-color: rgba(3,126,243,.4);
+    }
+    .verified-badge.state-verified::after {
+      border-color: rgba(3,126,243,.15);
+    }
+
+    /* STATE: pending */
+    .verified-badge.state-pending {
+      background: #f59e0b;
+      box-shadow: 0 4px 20px rgba(245,158,11,.35);
+      animation: pulse 1.6s ease-in-out infinite;
+    }
+    .verified-badge.state-pending::before {
+      border-color: rgba(245,158,11,.45);
+    }
+
+    /* STATE: rejected */
+    .verified-badge.state-rejected {
+      background: #ef4444;
+      box-shadow: 0 4px 20px rgba(239,68,68,.35);
+    }
+    .verified-badge.state-rejected::before {
+      border-color: rgba(239,68,68,.4);
+    }
+
+    .verified-label {
+      font-size: .75rem;
+      text-transform: uppercase; letter-spacing: 1.8px; font-weight: 700;
+      font-family: 'Montserrat', sans-serif;
+      padding: 3px 12px; border-radius: 20px;
+    }
+    .verified-label.state-verified { color: var(--primary); background: var(--primary-light); }
+    .verified-label.state-pending  { color: #b45309; background: #fef3c7; }
+    .verified-label.state-rejected { color: #b91c1c; background: #fee2e2; }
+
+    @keyframes spin  { to { transform: rotate(360deg); } }
+    @keyframes pulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.06); } }
+    .page {
+      max-width: 860px;
+      margin: 36px auto 60px;
+      padding: 0 16px;
+    }
+
+    /* ── CARD ── */
+    .card {
+      background: var(--card-bg);
+      border-radius: 14px;
+      padding: 36px 44px 40px;
+      box-shadow: 0 4px 24px rgba(0,0,0,.07);
+    }
+
+    /* ── ORG HEADER ── */
+    .org-header {
+      display: flex; align-items: center; gap: 16px;
+      margin-bottom: 32px;
+    }
+    .org-logo {
+      width: 60px; height: 60px;
+      border-radius: 8px;
+      background: var(--primary-light);
+      display: flex; align-items: center; justify-content: center;
+      overflow: hidden; flex-shrink: 0;
+      padding: 6px;
+    }
+    .org-logo img { width: 100%; height: 100%; object-fit: contain; }
+    .org-name {
+      font-family: 'Lato', sans-serif;
+      font-size: 2rem; font-weight: 900;
+      letter-spacing: .5px; color: var(--text);
+    }
+
+
+    /* ── FIELD GRID ── */
+
+    /* ── FIELD GRID ── */
+    .fields {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 28px 48px;
+      margin-bottom: 36px;
+    }
+    .field { display: flex; flex-direction: column; gap: 6px; }
+    .field-label {
+      display: flex; align-items: center; gap: 8px;
+      color: var(--primary);
+      font-family: 'Lato', sans-serif;
+      font-size: .9rem; font-weight: 700;
+    }
+    .field-label i { font-size: .95rem; }
+    .field-value {
+      font-family: 'Montserrat', sans-serif;
+      font-size: .95rem; color: var(--muted);
+      min-height: 22px; font-weight: 500;
+    }
+
+    /* ── ABOUT (full width) ── */
+    .about-section { margin-bottom: 36px; }
+    .about-section .field-label { margin-bottom: 10px; }
+    .about-text {
+      font-family: 'Montserrat', sans-serif;
+      font-size: .95rem; color: var(--muted);
+      line-height: 1.75; font-weight: 400;
+    }
+
+    /* ── DIVIDER ── */
+    .divider {
+      border: none; border-top: 1px solid var(--border);
+    }
+
+    /* ── FOLLOW ── */
+    .follow-section {
+      display: flex; flex-direction: column;
+      align-items: center; gap: 14px;
+      padding-top: 8px;
+    }
+    .follow-label {
+      font-size: .9rem; color: var(--muted);
+      font-family: 'Montserrat', sans-serif;
+    }
+    .social-icons { display: flex; gap: 12px; }
+
+    .social-btn {
+      width: 46px; height: 46px; border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.2rem; color: #fff; text-decoration: none;
+      transition: transform .15s, box-shadow .15s;
+    }
+    .social-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 18px rgba(0,0,0,.2);
+    }
+    .social-btn.instagram {
+      background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285AEB 90%);
+    }
+    .social-btn.linkedin { background: #0a66c2; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 600px) {
+      .card { padding: 24px 20px 28px; }
+      .fields { grid-template-columns: 1fr; gap: 22px; }
+      .org-name { font-size: 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <a class="nav-brand" href="#">
+      <img src="https://aiesec-logos.s3.eu-west-1.amazonaws.com/Blue-Logo.png" alt="AIESEC Logo" />
+      Volunteering Certificate
+    </a>
+  </nav>
+
+  <!-- PAGE -->
+  <main class="page">
+    <div class="card">
+
+      <!-- Org Header -->
+      <div class="org-header">
+        <div class="org-logo">
+          <img src="https://aiesec-logos.s3.eu-west-1.amazonaws.com/Blue-Logo.png" alt="AIESEC India" />
+        </div>
+        <h1 class="org-name">AIESEC INDIA</h1>
+      </div>
+
+      <!-- Verified Badge -->
+      <div class="verified-wrap">
+        <div class="verified-badge state-verified">
+          <i class="fa-solid fa-check"></i>
+        </div>
+        <span class="verified-label state-verified">Verified</span>
+      </div>
+
+      <!-- Fields Grid -->
+      <div class="fields">
+
+        <div class="field">
+          <div class="field-label"><i class="fa-regular fa-user"></i> Name</div>
+          <div class="field-value">MOHAMMED ZAHID AHMED [1BI22RI033]</div>
+        </div>
+
+        <div class="field">
+          <div class="field-label"><i class="fa-solid fa-circle-info"></i> Certificate Type</div>
+          <div class="field-value">Volunteer</div>
+        </div>
+
+        <div class="field">
+          <div class="field-label"><i class="fa-regular fa-calendar"></i> Event Name</div>
+          <div class="field-value">WORLDS LARGEST LESSON</div>
+        </div>
+
+        <div class="field">
+          <div class="field-label"><i class="fa-solid fa-circle-info"></i> Event type</div>
+          <div class="field-value">Local School Upscaling</div>
+        </div>
+
+        <div class="field">
+          <div class="field-label"><i class="fa-regular fa-calendar-days"></i> Start Date</div>
+          <div class="field-value">01/02/2025</div>
+        </div>
+
+        <div class="field">
+          <div class="field-label"><i class="fa-regular fa-calendar-days"></i> End Date</div>
+          <div class="field-value">01/03/2025</div>
+        </div>
+
+      </div><!-- /fields -->
+
+      <!-- About Section -->
+      <div class="about-section">
+        <div class="field-label">
+          <i class="fa-solid fa-briefcase"></i> About Organization
+        </div>
+        <hr class="divider" style="margin: 10px 0 14px;" />
+        <p class="about-text">
+          AIESEC in India is a non-political, independent, not-for-profit organization in consultative status with the United Nations Economic and Social Council (ECOSOC), affiliated with the UN DGC (formerly DPI), and recognized by UNESCO. It serves as a global platform for young people to explore and develop their leadership potential, operating in partnership with over 100 countries to facilitate international professional and volunteering experiences.
+        </p>
+      </div>
+
+      <!-- Follow -->
+      <div class="follow-section">
+        <span class="follow-label">Follow us at</span>
+        <div class="social-icons">
+          <a href="https://www.instagram.com/aiesec_india/" target="_blank" class="social-btn instagram">
+            <i class="fa-brands fa-instagram"></i>
+          </a>
+          <a href="https://in.linkedin.com/company/aiesecindia" target="_blank" class="social-btn linkedin">
+            <i class="fa-brands fa-linkedin-in"></i>
+          </a>
+        </div>
+      </div>
+
+    </div><!-- /card -->
+  </main>
+
+</body>
+</html>
